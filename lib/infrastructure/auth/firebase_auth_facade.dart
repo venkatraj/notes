@@ -33,9 +33,9 @@ class FirebaseAuthFacade implements IAuthFacade {
       return right(unit);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
-        return left(AuthFailure.emailAlreadyInUse());
+        return left(const AuthFailure.emailAlreadyInUse());
       } else {
-        return left(AuthFailure.serverError());
+        return left(const AuthFailure.serverError());
       }
     }
   }
@@ -56,9 +56,9 @@ class FirebaseAuthFacade implements IAuthFacade {
       return right(unit);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found' || e.code == 'wrong-password') {
-        return left(AuthFailure.invalidEmailAndPasswordCombination());
+        return left(const AuthFailure.invalidEmailAndPasswordCombination());
       } else {
-        return left(AuthFailure.serverError());
+        return left(const AuthFailure.serverError());
       }
     }
   }
@@ -68,7 +68,7 @@ class FirebaseAuthFacade implements IAuthFacade {
     try {
       final googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
-        return left(AuthFailure.cancelledByUser());
+        return left(const AuthFailure.cancelledByUser());
       }
 
       final googleAuthentication = await googleUser.authentication;
@@ -80,8 +80,8 @@ class FirebaseAuthFacade implements IAuthFacade {
 
       await _firebaseAuth.signInWithCredential(authCredential);
       return right(unit);
-    } on PlatformException catch (e) {
-      return left(AuthFailure.serverError());
+    } on PlatformException catch (_) {
+      return left(const AuthFailure.serverError());
     }
   }
 }
